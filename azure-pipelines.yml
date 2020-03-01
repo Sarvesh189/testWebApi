@@ -15,5 +15,19 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-  - script: dotnet build --source ././*.sln --configuration $(buildConfiguration)
-    displayName: 'dotnet build $(buildConfiguration)'
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    displayName: 'nuget restore'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    configuration: $(buildConfiguration)
+    displayName: 'build'
+
+#steps:
+#  - script: dotnet build --source ././*.sln --configuration $(buildConfiguration)
+#    displayName: 'dotnet build $(buildConfiguration)'
