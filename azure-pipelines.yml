@@ -28,7 +28,11 @@ steps:
     projects: '**/*.csproj'
     configuration: $(buildConfiguration)
     
-
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'azure-webapi-serviceconnection'
+    appName: 'AzTestWebApi'
+    package: $(System.ArtifactsDirectory)/**/*.zip    
 #steps:
 #  - script: dotnet build --source ././*.sln --configuration $(buildConfiguration)
 #    displayName: 'dotnet build $(buildConfiguration)'
