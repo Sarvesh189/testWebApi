@@ -40,11 +40,7 @@ steps:
   inputs:
     command: build
     solution: '$(solution)'
-    arguments: '/p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\testWebApi.zip"'	
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
+    arguments: '/p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\testWebApi.zip"'
 
 - task: DotNetCoreCLI@2   
   displayName: Publish
