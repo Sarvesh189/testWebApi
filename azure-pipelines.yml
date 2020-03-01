@@ -21,14 +21,41 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+#- task: VSBuild@1
+#  inputs:
+#    solution: '$(solution)'
+#    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true #/p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\testWebApi.zip" /p:DeployIisAppPath="Default Web Site"'
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+#
+#- task: VSTest@2
+# inputs:
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
+#
+
+- task: DotNetCoreCLI@2   
+  displayName: Build
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: build
+    solution: '$(solution)'
+    arguments: '/p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\testWebApi.zip"'	
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+
+- task: DotNetCoreCLI@2   
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'azure-webapi-serviceconnection'
+    appName: 'testWebApi'
+    package: $(System.ArtifactsDirectory)/**/*.z
