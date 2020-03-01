@@ -45,7 +45,7 @@ steps:
   inputs:
     azureSubscription: 'azure-webapi-serviceconnection'
     appName: 'AzTestWebApi'
-    package: $(Build.ArtifactStagingDirectory)/**/*.zip    
+    package: $(Build.ArtifactStagingDirectory)/AzTestWebApi.zip    
 #steps:
 #  - script: dotnet build --source ././*.sln --configuration $(buildConfiguration)
 #    displayName: 'dotnet build $(buildConfiguration)'
