@@ -39,7 +39,7 @@ steps:
   displayName: Build
   inputs:
     command: build
-    project: 'AztestWebApi/AztestWebApi.csproj'
+    solution: 'AztestWebApi/AztestWebApi.sln'
     arguments: '/p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\testWebApi.zip"'
 
 - task: DotNetCoreCLI@2   
