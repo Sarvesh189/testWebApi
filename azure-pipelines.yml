@@ -10,10 +10,42 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '../././*.sln'
+  solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
-  - script: dotnet build --source $(solution) --configuration $(buildConfiguration)
-    displayName: 'dotnet build $(buildConfiguration)'
+- task: NuGetToolInstaller@1
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    configuration: $(buildConfiguration)
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+
+# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+- task: PublishBuildArtifacts@1
+#  inputs:
+#    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+#    artifactName: 'AzTestWebApi'
+
+#- task: AzureWebApp@1
+#  inputs:
+#    azureSubscription: 'azure-webapi-serviceconnection'
+#    appName: 'AzTestWebApi'
+#    package: $(Build.ArtifactStagingDirectory)/AzTestWebApi.zip    
+#steps:
+#  - script: dotnet build --source ././*.sln --configuration $(buildConfiguration)
+#    displayName: 'dotnet build $(buildConfiguration)'
